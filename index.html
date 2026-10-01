@@ -1,10 +1,187 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My GitHub Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VortexDwarf</title>
+    <style>
+        /* Base Styling & Variables */
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --card-bg: #1e293b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header / Intro Section */
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+
+        /* Section Styling */
+        section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--card-bg);
+            padding-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        /* Bio Styles */
+        .bio-text {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+        }
+
+        /* Tag/Skill Pills */
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-pill {
+            background-color: var(--card-bg);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #334155;
+        }
+
+        /* Project Cards Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        /* Footer Link formatting */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <p>Welcome to my website hosted on GitHub Pages.</p>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Your Name</h1>
+            <p>Creative Thinker & Maker</p>
+        </header>
+
+        <!-- About / Bio Section -->
+        <section id="bio">
+            <h2>About Me</h2>
+            <p class="bio-text">
+                Welcome to my corner of the web! Replace this text with a cool description of who you are. Tell people what drives you, what hobbies you love, or what kind of magic you create. Keep it engaging, fun, and authentic.
+            </p>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills">
+            <h2>Things I'm Good At</h2>
+            <div class="skills-grid">
+                <span class="skill-pill">🚀 Web Development</span>
+                <span class="skill-pill">🎨 Graphic Design</span>
+                <span class="skill-pill">✍️ Content Writing</span>
+                <span class="skill-pill">🎮 Gaming</span>
+                <span class="skill-pill">🎧 Music Production</span>
+            </div>
+        </section>
+
+        <!-- Projects / Stuff Section -->
+        <section id="projects">
+            <h2>My Stuff & Projects</h2>
+            <div class="projects-grid">
+                <div class="card">
+                    <h3>Project One</h3>
+                    <p>A short description of an awesome project you built, a blog post you wrote, or something you are proud of creating.</p>
+                </div>
+                <div class="card">
+                    <h3>Project Two</h3>
+                    <p>Another amazing creation goes right here. You can add as many of these cards to the grid as you want.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2026 Your Name. Built with GitHub Pages.</p>
+        </footer>
+    </div>
+
 </body>
 </html>
