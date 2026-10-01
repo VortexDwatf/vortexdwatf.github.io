@@ -1,187 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VortexDwarf</title>
-    <style>
-        /* Base Styling & Variables */
-        :root {
-            --bg-color: #0f172a;
-            --text-color: #f8fafc;
-            --accent-color: #38bdf8;
-            --card-bg: #1e293b;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your Name</title>
+<meta name="description" content="Personal landing page">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP:wght@700&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000;
+    --ink: #e8e8ee;
+    --dim: #8a8a94;
+    --line: rgba(255,255,255,.28);
+    --glow: #7f9bff;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: "Space Mono", ui-monospace, monospace;
+    overflow: hidden;
+    padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
+  /* background video (shown only while sound is on) */
+  #bg {
+    position: fixed; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0; transition: opacity 1.2s;
+    filter: grayscale(.6) brightness(.55); z-index: 0; pointer-events: none;
+  }
+  body.sound #bg { opacity: 1; }
 
-        /* Layout Container */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+  /* subtle ambient glow behind content */
+  .ambient {
+    position: fixed; left: 50%; bottom: 8%; width: 70vmin; height: 70vmin;
+    transform: translateX(-50%); border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.07), transparent 65%);
+    z-index: 0; pointer-events: none;
+  }
 
-        /* Header / Intro Section */
-        header {
-            text-align: center;
-            padding: 40px 0;
-        }
+  /* ---------- enter gate ---------- */
+  #gate {
+    position: fixed; inset: 0; z-index: 10; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.6rem; transition: opacity .8s, visibility .8s;
+  }
+  #gate.hide { opacity: 0; visibility: hidden; }
+  #gate small { font-size: .62rem; letter-spacing: .3em; color: var(--dim); }
+  #gate h1 {
+    font-family: "Noto Sans JP", sans-serif; font-size: clamp(1.4rem, 6vw, 2rem);
+    text-shadow: 0 0 14px rgba(255,255,255,.55);
+  }
+  .enter, .icon-btn {
+    font: inherit; color: var(--ink); background: rgba(0,0,0,.55);
+    border: 1px solid var(--line); border-radius: 6px; cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s;
+  }
+  .enter { padding: .8rem 1.5rem; font-size: .72rem; letter-spacing: .12em; }
+  .enter:hover, .enter:focus-visible { background: #fff; color: #000; }
 
-        header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  /* ---------- profile ---------- */
+  main {
+    position: relative; z-index: 1; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 1s .2s;
+  }
+  body.entered main { opacity: 1; }
 
-        header p {
-            color: #94a3b8;
-            font-size: 1.2rem;
-            margin-top: 0;
-        }
+  .avatar {
+    width: 7.5rem; height: 7.5rem; border-radius: 50%; padding: 4px;
+    border: 2px solid rgba(255,255,255,.22);
+    box-shadow: 0 0 28px rgba(255,255,255,.12);
+    background: #111;
+  }
+  .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; background: #1b1b24; }
 
-        /* Section Styling */
-        section {
-            margin-bottom: 50px;
-        }
+  h2.name {
+    font-family: "Pacifico", cursive; font-weight: 400; font-size: 2.6rem; margin-top: 1.6rem;
+    color: var(--glow);
+    text-shadow: 0 0 6px var(--glow), 0 0 18px var(--glow), 0 0 42px rgba(127,155,255,.6);
+  }
+  .tagline { margin-top: 1rem; font-size: .62rem; letter-spacing: .22em; color: #cfd0d8; min-height: 1em; }
+  .tagline::after {
+    content: ""; display: inline-block; width: 4px; height: .85em; margin-left: 4px;
+    background: var(--glow); vertical-align: -1px; animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
 
-        h2 {
-            font-size: 1.8rem;
-            border-bottom: 2px solid var(--card-bg);
-            padding-bottom: 10px;
-            color: var(--accent-color);
-        }
+  .links { display: flex; gap: .6rem; margin-top: 1.8rem; }
+  .icon-btn {
+    position: relative; width: 3.3rem; height: 2.6rem;
+    display: grid; place-items: center; text-decoration: none;
+  }
+  .icon-btn svg { width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-btn svg.solid { fill: currentColor; stroke: none; }
+  .icon-btn:hover, .icon-btn:focus-visible { background: #e6e6e6; color: #000; border-color: #e6e6e6; }
 
-        /* Bio Styles */
-        .bio-text {
-            font-size: 1.1rem;
-            color: #cbd5e1;
-        }
+  /* tooltips */
+  .icon-btn::after {
+    content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%); white-space: nowrap; pointer-events: none;
+    background: #1c1c20; color: #ddd; font-size: .58rem; padding: .35rem .6rem;
+    border-radius: 4px; opacity: 0; transition: opacity .15s;
+  }
+  .icon-btn:hover::after, .icon-btn:focus-visible::after { opacity: 1; }
 
-        /* Tag/Skill Pills */
-        .skills-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+  /* sound toggle */
+  #sound {
+    position: fixed; z-index: 5; top: calc(env(safe-area-inset-top) + .9rem); left: .9rem;
+    width: 2.6rem; height: 2.6rem; border-radius: 8px;
+    opacity: 0; visibility: hidden; transition: opacity 1s;
+  }
+  body.entered #sound { opacity: 1; visibility: visible; }
+  #sound svg { width: 1.2rem; height: 1.2rem; }
+  #sound .on { display: none; }
+  body.sound #sound .on { display: block; }
+  body.sound #sound .off { display: none; }
 
-        .skill-pill {
-            background-color: var(--card-bg);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            border: 1px solid #334155;
-        }
+  /* location tag */
+  .loc {
+    position: fixed; z-index: 2; left: .9rem; bottom: calc(env(safe-area-inset-bottom) + .9rem);
+    font-size: .55rem; letter-spacing: .15em; color: var(--dim);
+    opacity: 0; transition: opacity 1s .4s;
+  }
+  body.entered .loc { opacity: 1; }
+  .loc i { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--dim); margin-right: .45rem; }
 
-        /* Project Cards Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #334155;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-        }
-
-        .card h3 {
-            margin-top: 0;
-            color: #fff;
-        }
-
-        .card p {
-            color: #94a3b8;
-            font-size: 0.95rem;
-            margin-bottom: 0;
-        }
-
-        /* Footer Link formatting */
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-    </style>
+  :focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: .01ms !important; animation: none !important; }
+  }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <h1>Your Name</h1>
-            <p>Creative Thinker & Maker</p>
-        </header>
+<video id="bg" muted loop playsinline preload="none"></video>
+<div class="ambient"></div>
 
-        <!-- About / Bio Section -->
-        <section id="bio">
-            <h2>About Me</h2>
-            <p class="bio-text">
-                Welcome, I am VortexDwarf (unless you know my real name) and I am a dude, Bonsais and moss are very cool, I love playing sb, I mountain bike, ski, play basketball and vollyball, oh and also listen to C418 on spotify its magestical music.
-            </p>
-        </section>
+<div id="gate">
+  <small>WELCOME</small>
+  <h1>ようこそ。</h1>
+  <button class="enter" id="enter">click to enter</button>
+</div>
 
-        <!-- Skills Section -->
-        <section id="skills">
-            <h2>My cool skills</h2>
-            <div class="skills-grid">
-                <span class="skill-pill">🚀 Web Development</span>
-                <span class="skill-pill">🎨 Graphic Design</span>
-                <span class="skill-pill">✍️ Content Writing</span>
-                <span class="skill-pill">🎮 Gaming</span>
-                <span class="skill-pill">🎧 Music Production</span>
-            </div>
-        </section>
+<button class="icon-btn" id="sound" aria-label="Toggle sound">
+  <svg class="off" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="m16 9 5 6M21 9l-5 6"/></svg>
+  <svg class="on" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+</button>
 
-        <!-- Projects / Stuff Section -->
-        <section id="projects">
-            <h2>Projects</h2>
-            <div class="projects-grid">
-                <div class="card">
-                    <h3>Project One</h3>
-                    <p>A short description of an awesome project you built, a blog post you wrote, or something you are proud of creating.</p>
-                </div>
-                <div class="card">
-                    <h3>Project Two</h3>
-                    <p>Another amazing creation goes right here. You can add as many of these cards to the grid as you want.</p>
-                </div>
-            </div>
-        </section>
+<main>
+  <div class="avatar"><img id="avatar" alt="Profile picture"></div>
+  <h2 class="name" id="name"></h2>
+  <p class="tagline" id="tagline" aria-label=""></p>
+  <nav class="links" id="links" aria-label="Links"></nav>
+</main>
+<div class="loc"><i></i><span id="loc"></span></div>
 
-        <!-- Footer -->
-        <footer>
-            <p>© 2026 VortexDwarf. Built with GitHub Pages.</p>
-        </footer>
-    </div>
+<script>
+/* ============ EDIT THIS ============ */
+const CONFIG = {
+  name: "Your Name",
+  tagline: "DEVELOPER / DESIGNER",
+  location: "YOUR COUNTRY",
+  avatar: "assets/avatar.jpg",       // square image, put it in /assets
+  music: "",                          // e.g. "assets/music.mp3" (leave empty for no sound)
+  video: "",                          // e.g. "assets/bg.mp4"   (leave empty for no video)
+  links: [
+    { type: "discord", label: "Open Discord profile", href: "https://discord.com/users/YOUR_ID" },
+    { type: "github",  label: "Open GitHub profile",  href: "https://github.com/YOUR_USERNAME" },
+    { type: "email",   label: "Send an email",        href: "mailto:you@example.com" },
+    { type: "blog",    label: "Read my notes",        href: "#" }
+  ]
+};
+/* =================================== */
 
+const ICONS = {
+  discord: '<svg class="solid" viewBox="0 0 24 24"><path d="M19.3 5.3A17 17 0 0 0 15 4l-.2.4a15 15 0 0 1 3.9 1.9 13 13 0 0 0-5-1.5h-3.4a13 13 0 0 0-5 1.5A15 15 0 0 1 9.2 4.4L9 4a17 17 0 0 0-4.3 1.3C2 9.300 1.300 13.200 1.700 17c1.800 1.300 3.500 2.100 5.200 2.600l1.100-1.800c-.6-.2-1.200-.5-1.700-.9l.4-.3a9.700 9.700 0 0 0 10.600 0l.4.300c-.5.400-1.100.7-1.700.9l1.100 1.800c1.700-.5 3.400-1.300 5.200-2.600.5-4.400-.8-8.300-3-11.700zM8.700 14.700c-1 0-1.800-.9-1.800-2s.8-2 1.800-2 1.800.9 1.800 2-.8 2-1.800 2zm6.600 0c-1 0-1.800-.9-1.800-2s.8-2 1.800-2 1.800.9 1.800 2-.8 2-1.800 2z"/></svg>',
+  github:  '<svg class="solid" viewBox="0 0 24 24"><path d="M12 .5a11.500 11.500 0 0 0-3.600 22.400c.6.100.8-.2.8-.6v-2c-3.200.7-3.900-1.500-3.900-1.500-.5-1.300-1.300-1.700-1.300-1.700-1-.7.100-.7.100-.7 1.200.1 1.800 1.200 1.800 1.200 1 1.800 2.700 1.300 3.300 1 .1-.7.400-1.300.7-1.600-2.600-.3-5.300-1.300-5.300-5.700 0-1.300.5-2.300 1.200-3.100-.1-.3-.5-1.500.1-3.100 0 0 1-.3 3.200 1.200a11 11 0 0 1 5.800 0c2.200-1.500 3.200-1.200 3.200-1.200.6 1.600.2 2.800.1 3.100.8.800 1.200 1.800 1.200 3.100 0 4.400-2.700 5.400-5.300 5.700.4.400.8 1.100.8 2.200v3.200c0 .4.200.7.800.6A11.500 11.500 0 0 0 12 .5z"/></svg>',
+  email:   '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  blog:    '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>'
+};
+
+const $ = id => document.getElementById(id);
+document.title = CONFIG.name;
+$("name").textContent = CONFIG.name;
+$("loc").textContent = CONFIG.location;
+$("avatar").src = CONFIG.avatar;
+$("avatar").onerror = e => { e.target.alt = ""; e.target.style.visibility = "hidden"; };
+
+$("links").innerHTML = CONFIG.links.map(l =>
+  `<a class="icon-btn" href="${l.href}" data-tip="${l.label}" aria-label="${l.label}"` +
+  (l.href.startsWith("http") ? ' target="_blank" rel="noopener noreferrer"' : "") + `>${ICONS[l.type] || ""}</a>`
+).join("");
+
+/* typewriter */
+function type(el, text, i = 0) {
+  el.setAttribute("aria-label", text);
+  (function step() {
+    el.textContent = text.slice(0, i++);
+    if (i <= text.length) setTimeout(step, 70);
+  })();
+}
+
+/* audio + video */
+const audio = CONFIG.music ? new Audio(CONFIG.music) : null;
+if (audio) audio.loop = true;
+const video = $("bg");
+if (CONFIG.video) video.src = CONFIG.video;
+
+function setSound(on) {
+  document.body.classList.toggle("sound", on);
+  if (audio) on ? audio.play().catch(() => {}) : audio.pause();
+  if (CONFIG.video) on ? video.play().catch(() => {}) : video.pause();
+}
+$("sound").addEventListener("click", () => setSound(!document.body.classList.contains("sound")));
+
+/* enter gate (the click also unlocks audio autoplay) */
+$("enter").addEventListener("click", () => {
+  $("gate").classList.add("hide");
+  document.body.classList.add("entered");
+  type($("tagline"), CONFIG.tagline);
+  if (audio || CONFIG.video) setSound(true);
+});
+</script>
 </body>
 </html>
